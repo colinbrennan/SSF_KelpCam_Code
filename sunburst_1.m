@@ -42,11 +42,5 @@ test = rgb2gray(test2);
 boi = (imsubtract(test, I));
 imshow(boi)
 
-test
-
-hello world
-yoyo
-test
-
 
 
