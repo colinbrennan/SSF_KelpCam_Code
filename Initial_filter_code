@@ -1,0 +1,36 @@
+%Set up a reference of a shpt with just water
+reference = imread('200123_182401_1.jpg');
+reference_gray = rgb2gray(reference);
+
+
+%load in test shot
+test = imread('200123_175827_1.jpg');
+test_gray = rgb2gray(test);
+%resize = imresize(test_gray, [1944,2592])
+
+%compare
+difference = imsubtract(reference_gray, test_gray);
+imshow(difference)
+
+%filter by intensity
+limit = difference > 50
+
+%filter by area
+filtered_image = bwareaopen(limit, 200000);
+imtool(filtered_image);
+
+%filter by length
+lengths = regionprops(filtered_image, 'MajorAxisLength');
+Lengths = [lengths.MajorAxisLength];
+index = Lengths > 20;
+final_test = lengths(index);
+
+
+
+
+if isempty(final_test)
+    disp('Only Water Here')
+else
+    disp('Something interesting')
+end
+
