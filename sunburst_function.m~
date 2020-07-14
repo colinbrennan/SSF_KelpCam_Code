@@ -9,15 +9,11 @@ imshow(test)
 
 
 %%
-
-function 
 test_image = imread('200123_171546_1.jpg');
     test_gray = rgb2gray(test_image);
-    
+    test_gray_2 = mat2gray(test_gray
     test_gray_1 = double(test_gray);
-    test_gray_2 = mat2gray(test_gray_1);
-    diference = imsubtract(test, test_gray_2);
-    imshow(diference);
+    diference = imsubtract(test_gray_1, test);
 
 %%
 

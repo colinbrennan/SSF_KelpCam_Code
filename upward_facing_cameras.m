@@ -16,7 +16,7 @@ A = []
 
     
     disp('here');
-else
+
 
 
 while i<length(filter_up_cell);   
@@ -48,7 +48,6 @@ end
 i = i+1;
 end
 
-end
 
 
 
