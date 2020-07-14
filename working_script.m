@@ -7,6 +7,7 @@ close all
 reference = imread('190516_125414_4.jpg');
 reference_gray = rgb2gray(reference);
 
+
 % removing sun glare
 
 [rows, columns] = size(reference_gray);
@@ -17,17 +18,19 @@ for i = 1:rows
     if reference_gray(i, x) < 210
        
     else
-        reference_gray(i,x) = 120;
+        reference_gray(i,x) = NaN;
     end
  
     end
 
 end
 
+
+
 % filtering out only images from upward-facing camera
 
 filter_up = dir('*_1.jpg*')
-filter_up_cell = struct2cell(filter_up);
+filter_up = struct2cell(filter_up);
 
 %%
   
@@ -38,7 +41,7 @@ Images_of_Interest = []
 for i = 1:10;   
     
 %load in test shot
-test = imread(filter_up_cell{1,i});
+test = imread(filter_up{1,i});
 test_gray = rgb2gray(test);
 
 % cut out sun glare
@@ -72,8 +75,8 @@ final_test = lengths(index);
 if isempty(final_test);
   
 else
- info = imfinfo(filter_up_cell{1,i});
- Images_of_Interest = [Images_of_Interest; string(filter_up_cell{1,i}), info.Comment]
+ info = imfinfo(filter_up{1,i});
+ Images_of_Interest = [Images_of_Interest; string(filter_up{1,i}), info.Comment]
     
 end
 end
