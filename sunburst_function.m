@@ -2,23 +2,30 @@ clear
 clc
 close all
 
+start = [1356,930,744,99];
+figure
+imshow(pixel_values(start));
+figure
 
-start = [1000,1000,50,100];
-test = pixel_values(start);
-imshow(test)
+
+%ans = fminsearch(@compare, start);
+
+
+
 
 
 %%
-
-function 
-test_image = imread('200123_171546_1.jpg');
-    test_gray = rgb2gray(test_image);
+function summation = compare(m)
     
-    test_gray_1 = double(test_gray);
-    test_gray_2 = mat2gray(test_gray_1);
-    diference = imsubtract(test, test_gray_2);
-    imshow(diference);
-
+    test_image = imread('200123_171546_1.jpg');
+    test_gray = rgb2gray(test_image);
+    test_gray_double = double(test_gray);
+    test_gray_mat = mat2gray(test_gray_double);
+    m = pixel_values(m);
+    dif = imsubtract(m, test_gray_mat);
+    dif_2 = mat2gray(dif);
+    summation = sum(sum(dif_2));
+end
 %%
 
 
@@ -34,6 +41,9 @@ function pv = pixel_values(p)
     pv_raw = (r-r_1)/(r_2-r_1);
     pv = pv_raw/(max(max(pv_raw)));
     
-    
 end
+
+
+%%
+
 
