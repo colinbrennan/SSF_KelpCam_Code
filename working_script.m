@@ -2,77 +2,41 @@ clear
 clc
 close all
 
-% setting up initial reference image for "just water"
-
-reference = imread('190516_125259_3.jpg');
-reference_gray = rgb2gray(reference);
-
-
-
-% removing sun glare
-
-[rows, columns] = size(reference_gray);
-
-for i = 1:rows
-    for x = 1:columns
- 
-    if reference_gray(i, x) < 190
-       
-    else
-        reference_gray(i,x) = NaN;
-    end
- 
-    end
-
-end
-
-
 
 % filtering out only images from upward-facing camera
 
 filter_up = dir('*_1.jpg*')
 filter_up = struct2cell(filter_up);
+[r,c] = size(filter_up);
+
+pixel_rows = 1944;
+pixel_columns = 2592;
 
 %%
   
 % process all of the images
-
 Images_of_Interest = []
 
-for i = 1:20;   
+for i = 1:c;   
     
 %load in test shot
 test = imread(filter_up{1,i});
 test_gray = rgb2gray(test);
 
-% cut out sun glare
-for a = 1:rows
-    for b = 1:columns
- 
-    if test_gray(a, b) < 190
-       
-    else
-        test_gray(a,b) = NaN;
-    end
-    end
-end
+%%
 
-%compare
-difference = imsubtract(reference_gray, test_gray);
-imshow(difference)
-
-%filter by intensity
-limit = difference > 60;
+%filter using line detection
+test_gray_edged = edge(test_gray, 'prewitt', 'nothinning');
 
 
-%filter by area
-filtered_image = bwareaopen(limit, 200000);
+%filter returns by area
+filtered_image = bwareaopen(test_gray_edged, 7000);
 
 
-%filter by length
+%filter returns by length
 lengths = regionprops(filtered_image, 'MajorAxisLength');
 Lengths = [lengths.MajorAxisLength];
-index = Lengths > 1000;
+index = Lengths > 100;
 final_test = lengths(index);
 
 if isempty(final_test);
