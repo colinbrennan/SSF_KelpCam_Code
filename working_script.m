@@ -8,14 +8,15 @@ close all
 filter_up = dir('*_1.jpg*')
 filter_up = struct2cell(filter_up);
 [r,c] = size(filter_up);
-
-pixel_rows = 1944;
-pixel_columns = 2592;
+%%
+img_one = char(filter_up(1,1));
+test_image = imread(img_one);
+[pixel_rows, pixel_columns, colorChannels] = size(test_image);
 
 %%
   
 % process all of the images
-Images_of_Interest = []
+images_of_interest = []
 
 for i = 1:c;   
     
@@ -26,27 +27,29 @@ test_gray = rgb2gray(test);
 %%
 
 %filter using line detection
-test_gray_edged = edge(test_gray, 'prewitt', 'nothinning');
+test_gray_edged = edge(test_gray, 'prewitt', .005, 'nothinning');
 
 
 %filter returns by area
-filtered_image = bwareaopen(test_gray_edged, 7000);
+filtered_image = bwareaopen(test_gray_edged, 10000);
 
 
 %filter returns by length
 lengths = regionprops(filtered_image, 'MajorAxisLength');
-Lengths = [lengths.MajorAxisLength];
-index = Lengths > 100;
-final_test = lengths(index);
+lengths_row_vector = [lengths.MajorAxisLength];
+index = lengths_row_vector > 100;
+filtered_lengths = lengths_row_vector(index);
 
-if isempty(final_test);
+if isempty(filtered_lengths);
   
 else
  info = imfinfo(filter_up{1,i});
- Images_of_Interest = [Images_of_Interest; string(filter_up{1,i}), info.Comment]
+ images_of_interest = [images_of_interest; string(filter_up{1,i}), info.Comment];
     
 end
 end
+%%
+
 
 
  
