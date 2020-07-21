@@ -3,12 +3,26 @@
 %%
 
 imageFolder = imageDatastore('/Users/colinbrennan/Desktop/test')
-imageLabeler(imageFolder);
+%imageLabeler(imageFolder);
+
+image_size = [1944 2592 3]
+
+numClasses = 3
+
+anchorBoxes = [1 1;4 6;5 3;9 6];
+
+network = resnet50()
+
+analyzeNetwork(network)
+
+featureLayer = 'activation_49_relu';
+
+lgraph = yolov2Layers(imageSize,numClasses,anchorBoxes,network,featureLayer);
 %%
 yo = objectDetectorTrainingData(gTruth);
 
 %%
-acfDetector = trainACFObjectDetector(yo,'NegativeSamplesFactor',2);
+acfDetector = trainYOLOv2ObjectDetector(yo);
 
 %%
 img = imread('yes190516_124455_1.jpg');
