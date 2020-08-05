@@ -1,13 +1,15 @@
 
 
 %%
-
+clear
+clc
+close all
 imageFolder = imageDatastore('/Users/colinbrennan/Desktop/test')
-%imageLabeler(imageFolder);
-
+imageLabeler(imageFolder);
+%%
 image_size = [1944 2592 3]
 
-numClasses = 3
+numClasses = 4
 
 anchorBoxes = [1 1;4 6;5 3;9 6];
 
@@ -17,12 +19,14 @@ analyzeNetwork(network)
 
 featureLayer = 'activation_49_relu';
 
-lgraph = yolov2Layers(imageSize,numClasses,anchorBoxes,network,featureLayer);
+lgraph = yolov2Layers(image_size,numClasses,anchorBoxes,network, featureLayer);
 %%
-yo = objectDetectorTrainingData(gTruth);
+training_set = objectDetectorTrainingData(gTruth);
 
 %%
-acfDetector = trainYOLOv2ObjectDetector(yo);
+options1 = trainingOptions('sgdm');
+%%
+detector = trainRCNNObjectDetector(training_set, lgraph);
 
 %%
 img = imread('yes190516_124455_1.jpg');
