@@ -76,12 +76,13 @@ training_data = data.gTruth;
 visiondata = fullfile('Users', 'colinbrennan', 'Desktop', 'cifar-10-batches-mat','test')
 
 %%
-training_data = fullfile('test')
-addpath(training_data)
-%%
-%%%%
 
-imds = imageDatastore(visiondata);
+%%
+
+%%
+
+imds = (imageDatastore('/Users/colinbrennan/Desktop/cifar-10-batches-mat'))
+imageLabeler(imds)
 %%
 
 options = trainingOptions('sgdm', ...

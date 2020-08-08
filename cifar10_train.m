@@ -76,16 +76,17 @@ training_data = data.gTruth;
 visiondata = fullfile('Users', 'colinbrennan', 'Desktop', 'cifar-10-batches-mat','test')
 
 %%
-training_data = fullfile('test')
-addpath(training_data)
-%%
+
 %%
 
 %%
 
-
+imds = (imageDatastore('/Users/colinbrennan/Desktop/cifar-10-batches-mat'))
+imageLabeler(imds)
 %%
 
+data = objectDetectorTrainingData(gTruth_final)
+%%
 options = trainingOptions('sgdm', ...
         'MiniBatchSize', 128, ...
         'InitialLearnRate', 1e-3, ...
@@ -93,9 +94,27 @@ options = trainingOptions('sgdm', ...
         'LearnRateDropFactor', 0.1, ...
         'LearnRateDropPeriod', 100, ...
         'MaxEpochs', 100, ...
-        'Verbose', true);
+        'Verbose', true, 'Plots', 'training-progress');
     
-      rcnn = trainRCNNObjectDetector(gTruth, network, options, 'NegativeOverlapRange', [0 0.3], 'PositiveOverlapRange',[0.5 1])
+      rcnn = trainRCNNObjectDetector(data, network, options, 'NegativeOverlapRange', [0 0.3], 'PositiveOverlapRange',[0.5 1])
+  
+      
+      %%
+      testImage = imread('190516_130923_3.jpg');
+      
+ %%
+      
+      [bboxes,score,label] = detect(rcnn,testImage,'MiniBatchSize',200)
+   %%
+   [score, idx] = max(score);
+
+bbox = bboxes(idx, :);
+annotation = sprintf('%s: (Confidence = %f)', label(idx), score);
+
+outputImage = insertObjectAnnotation(testImage, 'rectangle', bbox, annotation);
+
+figure
+imshow(outputImage)
       
       
       
